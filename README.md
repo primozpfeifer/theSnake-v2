@@ -67,9 +67,10 @@ docker exec -it cypress bash
 
 Running the script or the commands above will make a docker container from the image we pulled before, run it in the background and enter the running container.
  
-##	Run cypress test(s)
+##	Run cypress test
 
-Always use the lastest `cypress.config.j`s and `cypress.env.json` files from project `MC5000AX_TOP` when running the test(s).
+Remember to always use the lastest `cypress.config.js` and `cypress.env.json` files from project `MC5000AX_TOP` when running test(s).
+To run cypress GUI or a test, navigate to your projects' test directory and run:
 
 ```bash
 #The basic command syntax for starting cypress test.
@@ -85,10 +86,10 @@ cypress open -P "${PWD}"
 ## Stopping and restarting docker container
 
 ```bash
-# Stop the running cypress docker container.
+# Stop the running docker container.
 docker stop cypress
-# Restart stopped docker container.
+# Restart the stopped docker container.
 docker start cypress
-# Reenter running container.
+# Reenter the running container.
 docker exec -it -u "$(id -u)" cypress bash
 ```
