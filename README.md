@@ -7,7 +7,9 @@ HOW TO PREPARE CYPRESS FOR USE ON YOUR LOCAL VM
 
 
 ## Get docker image
+
 Pull the image from Nexus, replacing the tag if necessary:
+
 ```bash
 docker pull registry.devops.iskratel.cloud/devops/containers/cypress:stable
 docker tag registry.devops.iskratel.cloud/devops/containers/cypress:stable cypress:local
@@ -17,12 +19,18 @@ docker tag registry.devops.iskratel.cloud/devops/containers/cypress:stable cypre
 
 Get the following projects from GitLab:
 
-[cypress](https://vmgitent.iskratel.si/devops/Containers/cypress.git)
+[cypress](https://vmgitent.iskratel.si/devops/Containers/cypress)
 Project includes a short manual on using cypress and some useful scripts
-[i5g_fe](https://vmgitent.iskratel.si/MC5000AX/i5g-fe.git)
+[i5g_fe](https://vmgitent.iskratel.si/MC5000AX/i5g-fe)
 Project is the frontend of 5G system, it also includes current cypress tests
-[MC5000AX_TOP](https://vmgitent.iskratel.si/MC5000AX/MC5000AX_TOP.git)
+[MC5000AX_TOP](https://vmgitent.iskratel.si/MC5000AX/MC5000AX_TOP)
 Project includes cypress config and env files with the latest relase data
+
+```bash
+git clone https://vmgitent.iskratel.si/devops/Containers/cypress.git
+git clone https://vmgitent.iskratel.si/MC5000AX/i5g-fe.git
+git clone https://vmgitent.iskratel.si/MC5000AX/MC5000AX_TOP.git
+```
 
 ##	Update ENV with the latest NF tags
 
