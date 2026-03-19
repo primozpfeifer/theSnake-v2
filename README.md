@@ -50,10 +50,10 @@ Running the the container from your base `/git` directory will allow cypress to 
 
 ### GUI mode
 
-To run cypress in GUI enabled mode, run the following script from `/git` directory:
+To run cypress in GUI enabled mode, run script `docker_cnt_gui.sh` located in `devops/Containers/cypress/scripts` from your `/git` directory:
 
 ```bash
-./cypress/scripts/docker_cnt_gui.sh
+./docker_cnt_gui.sh
 ```
 
 ### CLI mode
