@@ -19,18 +19,15 @@ docker tag registry.devops.iskratel.cloud/devops/containers/cypress:stable cypre
 
 Get the following projects from GitLab:
 
-[cypress](https://vmgitent.iskratel.si/devops/Containers/cypress)
-Project includes a short manual on using cypress and some useful scripts
-[i5g_fe](https://vmgitent.iskratel.si/MC5000AX/i5g-fe)
-Project is the frontend of 5G system, it also includes current cypress tests
-[MC5000AX_TOP](https://vmgitent.iskratel.si/MC5000AX/MC5000AX_TOP)
-Project includes cypress config and env files with the latest relase data
-
 ```bash
 git clone https://vmgitent.iskratel.si/devops/Containers/cypress.git
 git clone https://vmgitent.iskratel.si/MC5000AX/i5g-fe.git
 git clone https://vmgitent.iskratel.si/MC5000AX/MC5000AX_TOP.git
 ```
+
+Project [cypress](https://vmgitent.iskratel.si/devops/Containers/cypress) includes a short manual on using cypress and some useful scripts, 
+[i5g_fe](https://vmgitent.iskratel.si/MC5000AX/i5g-fe) is the frontend of 5G system, it also includes current cypress tests and 
+[MC5000AX_TOP](https://vmgitent.iskratel.si/MC5000AX/MC5000AX_TOP) includes cypress config and env files with the latest relase data.
 
 ##	Update ENV with the latest NF tags
 
