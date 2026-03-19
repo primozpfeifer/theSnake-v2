@@ -43,8 +43,10 @@ The script is located in `MC5000AX/i5g-fe/develop/e2e/cypress/integration/deploy
 
 ## Run docker container
 
-Cypress can be used in GUI enabled mode or CLI mode. GUI mode allows you to use cypress GUI development tool or observe how cypress performs and interacts with the website while testing.
-Running the the container from base `/git` directory will allow cypress to access all the projects in your git directory.
+Cypress can be used in GUI enabled mode or CLI mode.
+GUI mode allows you to use cypress GUI development tool or observe how cypress performs and interacts with the website while running the test.
+
+Running the the container from your base `/git` directory will allow cypress to access all the projects in your git directory.
 
 ### GUI mode
 
