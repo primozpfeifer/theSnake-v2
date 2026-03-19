@@ -48,7 +48,6 @@ The script is located in `MC5000AX/i5g-fe/develop/e2e/cypress/integration/deploy
 Cypress can be used in GUI enabled mode or CLI mode.
 Running the the container from base `/git` directory will allow cypress to access all the projects in your git directory.
 
-
 ### GUI mode
 
 To run cypress in GUI enabled mode, run the following script from `/git` directory:
@@ -67,42 +66,29 @@ docker exec -it cypress bash
 ```
 
 This will make a docker container from the image we pulled before, run it in the background and enter the running container.
-
  
-5.	RUN CYPRESS TEST(S)
+##	Run cypress test(s)
 
-Always use the lastest cypress.config.js and cypress.env.json files from MC5000AX_TOP when running the test(s).
+Always use the lastest `cypress.config.j`s and `cypress.env.json` files from project `MC5000AX_TOP` when running the test(s).
 
-The basic command syntax to start cypress test is:
+```bash
+#The basic command syntax for starting cypress test.
+cypress run -P <project_dir> -C <config> -b <browser> -s <spec>
+# Run a cypress test with browser GUI.
+cypress run -P "${PWD}" -C cypress.config.js -b chrome -s deploy-core.e2e.spec.js --headed
+# Run a cypress test without browser GUI.
+cypress run -P "${PWD}" -C cypress.config.js -b chrome -s deploy-core.e2e.spec.js
+# Run cypress GUI editor.
+cypress open -P "${PWD}"
+```
 
-	cypress run -P <project_dir> -C <config> -b <browser> -s <spec>
+## Stopping and restarting docker container
 
-
-Run a cypress test with browser GUI:
-
-	cypress run -P "${PWD}" -C cypress.config.js -b chrome -s deploy-core.e2e.spec.js --headed
-
-Run a cypress test without browser GUI:
-
-	cypress run -P "${PWD}" -C cypress.config.js -b chrome -s deploy-core.e2e.spec.js
-
-Run cypress GUI editor:
-
-	cypress open -P "${PWD}"
-
- 
-6.	STOPPING AND RESTARTING DOCKER CONTAINER
-
-Stop your running cypress docker container with the following command:
-
-	docker stop cypress
-
-
-Restart your stopped docker container with the following command:
-
-	docker start cypress
-
-
-Reenter the running container with the following command:
-
-	docker exec -it -u "$(id -u)" cypress bash
+```bash
+# Stop the running cypress docker container.
+docker stop cypress
+# Restart stopped docker container.
+docker start cypress
+# Reenter running container.
+docker exec -it -u "$(id -u)" cypress bash
+```
