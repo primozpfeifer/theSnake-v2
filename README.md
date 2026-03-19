@@ -2,17 +2,12 @@
 
 [[_TOC_]]
 
-[Cypress](https://docs.cypress.io/app/get-started/why-cypress) is a tool that allows you to test webpages. Use it to write and run Cypress test scripts (called "specs") which automate procedures like clicking buttons, typing text, and verifying that the webpages respond correctly. You can write them in Cypress GUI or in any other editor. This project contains all the files needed to build Docker image `cypress`, which contains dependencies, Cypress, and web browsers. You can use the image in a pipeline, or you can make a container locally and work in it. You will have to write your own Cypress files: specs, config files, support files, cypress.env.json. The image does not provide any of these.
-
-
 
 HOW TO PREPARE CYPRESS FOR USE ON YOUR LOCAL VM
 
 
 ## Get docker image
-
 Pull the image from Nexus, replacing the tag if necessary:
-
 ```bash
 docker pull registry.devops.iskratel.cloud/devops/containers/cypress:stable
 docker tag registry.devops.iskratel.cloud/devops/containers/cypress:stable cypress:local
