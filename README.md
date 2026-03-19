@@ -2,9 +2,7 @@
 
 [[_TOC_]]
 
-
-HOW TO PREPARE CYPRESS FOR USE ON YOUR LOCAL VM
-
+This project contains step-by-stop instruction on how to install and use cypress to perform website tests.
 
 ## Get docker image
 
