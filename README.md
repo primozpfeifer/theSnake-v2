@@ -1,20 +1,15 @@
-# cypress
+# 5g-cypress-test-vv
 
 [[_TOC_]]
 
 [Cypress](https://docs.cypress.io/app/get-started/why-cypress) is a tool that allows you to test webpages. Use it to write and run Cypress test scripts (called "specs") which automate procedures like clicking buttons, typing text, and verifying that the webpages respond correctly. You can write them in Cypress GUI or in any other editor. This project contains all the files needed to build Docker image `cypress`, which contains dependencies, Cypress, and web browsers. You can use the image in a pipeline, or you can make a container locally and work in it. You will have to write your own Cypress files: specs, config files, support files, cypress.env.json. The image does not provide any of these.
 
-Some projects use the image in their pipelines. They use floating image `registry.devops.iskratel.cloud/devops/containers/cypress:stable`. The image is built in DevOps/containers/cypress pipeline. When a developer wants to make a new release – as in to build a production image and make that image immediately available to our pipelines – he/she tags DevOps/containers/cypress in GitLab. Its pipeline builds an image from the commit. Then, it pushes the image to the registry twice, once with the GitLab tag as its tag, and then again with floating tag `stable`. Thus, we do not have to update the image in other projects' pipelines each time we make a new one. Tagging the image twice also allows us to keep track of which image is currently used in our pipelines, since we know that `stable` is always an alias for the latest tag. If we discover an error in `stable`, we can rebuild a previous tag, and make it be the `stable` until the error is fixed. The other images have the tag `[BRANCH]-[TIMESTAMP]-[HASH]`.
 
-## Base image
 
-Dockerfile uses an official Cypress image as the base image. Cypress provides several variants of official images: one contains dependencies, but no Cypress; another contains dependencies and browsers, but no Cypress ... Dockerfile uses the variant `cypress/included`, where everything possible is installed. [More in the official docs.](https://docs.cypress.io/app/continuous-integration/overview#Cypress-Docker-variants)
+HOW TO PREPARE CYPRESS FOR USE ON YOUR LOCAL VM
 
-## Use in CI
 
-Use the image in your pipelines. Project [DevOps/cicd-common](https://vmgitent.iskratel.si/devops/cicd-common) provides reusable CI jobs. Consult its documentation for recommended usage patterns. Your pipelines can also define custom CI jobs that use the image.
-
-## Use locally
+## Get docker image
 
 Pull the image from Nexus, replacing the tag if necessary:
 
@@ -23,88 +18,88 @@ docker pull registry.devops.iskratel.cloud/devops/containers/cypress:stable
 docker tag registry.devops.iskratel.cloud/devops/containers/cypress:stable cypress:local
 ```
 
-Or build the image locally:
+## Get GitLab projects
+
+Get the following projects from GitLab:
+
+[cypress](https://vmgitent.iskratel.si/devops/Containers/cypress.git)
+Project includes a short manual on using cypress and some useful scripts
+[i5g_fe](https://vmgitent.iskratel.si/MC5000AX/i5g-fe.git)
+Project is the frontend of 5G system, it also includes current cypress tests
+[MC5000AX_TOP](https://vmgitent.iskratel.si/MC5000AX/MC5000AX_TOP.git)
+Project includes cypress config and env files with the latest relase data
+
+##	Update ENV with the latest NF tags
+
+To update `cypress.env.json` located in `MC5000AX_TOP` with the latest NF tags, run:
 
 ```bash
-docker build -t "cypress:local" --network "host" .
+wget https://nexus.devops.iskratel.cloud/repository/documentation/GP1010AX/3.0.0.0.220/release.json -O release_GP1010AX.json
+./inject_cypress_env.py "release_GP1010AX.json" "cypress/cypress.env.json"
 ```
 
-Make a container. If you plan to open Cypress GUI or any other GUI, make sure that X11 is installed and configured on host. Then run:
+The script is located in `MC5000AX/i5g-fe/develop/e2e/cypress/integration/deploy`.
+
+## Run docker container
+
+Cypress can be used in GUI enabled mode or CLI mode.
+Running the the container from base `/git` directory will allow cypress to access all the projects in your git directory.
+
+
+### GUI mode
+
+To run cypress in GUI enabled mode, run the following script from `/git` directory:
 
 ```bash
-./scripts/docker_cnt_gui.sh
+./cypress/scripts/docker_cnt_gui.sh
 ```
 
-Explanation: The helper script uses the image to make and enter a background container with X11 files and variables. Read its docstring and comments for the details.
+### CLI mode
 
-If you don't plan to open Cypress GUI or any other GUI, then you don't need X11. Cypress must have still permissions to read and write files on host (e.g. Cypress videos). The image already has users `root` (UID 0) and `node` (UID 1000). Get the host UID with `id -u`. If the host UID matches one of the users, run:
+To run cypress in CLI mode, run the following command(s) from `/git` directory:
 
 ```bash
 docker run -d --name cypress --net host -w "${PWD}" -v "${PWD}:${PWD}" -u "$(id -u)" cypress:local sleep inf
 docker exec -it cypress bash
 ```
 
-If the host UID doesn't match any, run:
+This will make a docker container from the image we pulled before, run it in the background and enter the running container.
 
-```bash
-docker run -d --name cypress --net host -w "${PWD}" -v "${PWD}:${PWD}" cypress:local sleep inf && \
-user="$(id -nu)" && uid="$(id -u)" && gid="$(id -g)" && home="${HOME}" && \
-docker exec -t cypress bash -c "groupadd -f -g ${gid} ${user} && useradd ${user} -u ${uid} -g ${gid} -d ${home} && chown ${uid}:${gid} -R ${home}" && \
-docker exec -it -u "${user}" cypress bash
-```
+ 
+5.	RUN CYPRESS TEST(S)
 
-Explanation: The code makes and enters a background container that contains a new user with the host UID.
+Always use the lastest cypress.config.js and cypress.env.json files from MC5000AX_TOP when running the test(s).
 
-Once you are in the container, use the tools. Examples:
+The basic command syntax to start cypress test is:
 
-```bash
-# Get help for Cypress.
-cypress --help
-# Open Cypress GUI in the foreground.
-cypress open -P "${PWD}"
-# Open Cypress GUI in the background.
-cypress open -P "${PWD}" &
-# Run a Cypress spec with browser GUI.
-cypress run -P "${PWD}" -C cypress.config.js -b chrome -s deploy-core.e2e.spec.js --headed
-# Run a Cypress spec without browser GUI.
-cypress run -P "${PWD}" -C cypress.config.js -b chrome -s deploy-core.e2e.spec.js
-# Use browser GUI by yourself.
-google-chrome --no-sandbox &
-```
+	cypress run -P <project_dir> -C <config> -b <browser> -s <spec>
 
-The commands open GUIs like they would in a normal graphical environment:
 
-![screenshot](./imgs/img1.PNG)
+Run a cypress test with browser GUI:
 
-![screenshot](./imgs/img2.PNG)
+	cypress run -P "${PWD}" -C cypress.config.js -b chrome -s deploy-core.e2e.spec.js --headed
 
-The commands might log non-breaking messages, but still work as intended:
+Run a cypress test without browser GUI:
 
-```text
-Still waiting to connect to Chrome, retrying in 1 second (attempt 18/62)
-Still waiting to connect to Chrome, retrying in 1 second (attempt 19/62)
-Still waiting to connect to Chrome, retrying in 1 second (attempt 20/62)
-```
+	cypress run -P "${PWD}" -C cypress.config.js -b chrome -s deploy-core.e2e.spec.js
 
-```text
-DevTools listening on ws://127.0.0.1:40909/devtools/browser/ecbe8a7e-3092-4bf6-b02f-b4ee7ae59232
-libva error: vaGetDriverNameByIndex() failed with unknown libva error, driver_name = (null)
-[998:0418/103642.837815:ERROR:gpu_memory_buffer_support_x11.cc(44)] dri3 extension not supported.
-```
+Run cypress GUI editor:
 
-```text
-[48:70:0306/160814.252630:ERROR:bus.cc(399)] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
-[48:75:0306/160818.452829:ERROR:bus.cc(399)] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
-[48:75:0306/160818.453268:ERROR:bus.cc(399)] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
-[48:70:0306/160818.468484:ERROR:bus.cc(399)] Failed to connect to the bus: Address does not contain a colon
-[48:70:0306/160818.468541:ERROR:bus.cc(399)] Failed to connect to the bus: Address does not contain a colon
-[48:70:0306/160818.487787:ERROR:bus.cc(399)] Failed to connect to the bus: Address does not contain a colon
-[48:70:0306/160818.488328:ERROR:bus.cc(399)] Failed to connect to the bus: Address does not contain a colon
-[48:112:0306/160818.622208:ERROR:bus.cc(399)] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
-[48:112:0306/160818.622367:ERROR:bus.cc(399)] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
-[48:112:0306/160818.624634:ERROR:bus.cc(399)] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
-[48:112:0306/160818.624831:ERROR:bus.cc(399)] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
-[48:112:0306/160818.624974:ERROR:bus.cc(399)] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
-libva error: vaGetDriverNameByIndex() failed with unknown libva error, driver_name = (null)
-[84:84:0306/160824.733936:ERROR:viz_main_impl.cc(186)] Exiting GPU process due to errors during initialization
-```
+	cypress open -P "${PWD}"
+
+ 
+6.	STOPPING AND RESTARTING DOCKER CONTAINER
+
+Stop your running cypress docker container with the following command:
+
+	docker stop cypress
+
+
+Restart your stopped docker container with the following command:
+
+	docker start cypress
+
+
+Reenter the running container with the following command:
+
+	docker exec -it -u "$(id -u)" cypress bash
