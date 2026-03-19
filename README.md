@@ -69,11 +69,11 @@ Running the script or the commands above will make a docker container from the i
  
 ##	Run cypress test
 
-Remember to always use the lastest `cypress.config.js` and `cypress.env.json` files from project `MC5000AX_TOP` when running test(s).
+Remember to always use the lastest `cypress.config.js` and `cypress.env.json` files from project `MC5000AX_TOP` when running test(s).\
 To run cypress GUI or a test, navigate to your projects' test directory and run:
 
 ```bash
-#The basic command syntax for starting cypress test.
+# The basic command syntax for starting cypress test.
 cypress run -P <project_dir> -C <config> -b <browser> -s <spec>
 # Run a cypress test with browser GUI.
 cypress run -P "${PWD}" -C cypress.config.js -b chrome -s deploy-core.e2e.spec.js --headed
