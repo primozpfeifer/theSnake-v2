@@ -17,6 +17,11 @@ docker tag registry.devops.iskratel.cloud/devops/containers/cypress:stable cypre
 
 ## Get GitLab projects
 
+You need various config files, helper scripts and actual tests from other projects.
+Project [cypress](https://vmgitent.iskratel.si/devops/Containers/cypress) includes a more detailed description of cypress, manual and a starting script, 
+[i5g_fe](https://vmgitent.iskratel.si/MC5000AX/i5g-fe) is the frontend of 5G system, which include current cypress tests and 
+[MC5000AX_TOP](https://vmgitent.iskratel.si/MC5000AX/MC5000AX_TOP) includes cypress config and env files with the latest relase data.
+
 Get the following projects from GitLab:
 
 ```bash
@@ -25,11 +30,7 @@ git clone https://vmgitent.iskratel.si/MC5000AX/i5g-fe.git
 git clone https://vmgitent.iskratel.si/MC5000AX/MC5000AX_TOP.git
 ```
 
-Project [cypress](https://vmgitent.iskratel.si/devops/Containers/cypress) includes a short manual on using cypress and some useful scripts, 
-[i5g_fe](https://vmgitent.iskratel.si/MC5000AX/i5g-fe) is the frontend of 5G system, it also includes current cypress tests and 
-[MC5000AX_TOP](https://vmgitent.iskratel.si/MC5000AX/MC5000AX_TOP) includes cypress config and env files with the latest relase data.
-
-##	Update ENV with the latest NF tags
+##	Update ENV config file with the latest NF tags
 
 To update `cypress.env.json` located in `MC5000AX_TOP` with the latest NF tags, run:
 
@@ -42,7 +43,7 @@ The script is located in `MC5000AX/i5g-fe/develop/e2e/cypress/integration/deploy
 
 ## Run docker container
 
-Cypress can be used in GUI enabled mode or CLI mode.
+Cypress can be used in GUI enabled mode or CLI mode. GUI mode allows you to use cypress GUI development tool or observe how cypress performs and interacts with the website while testing.
 Running the the container from base `/git` directory will allow cypress to access all the projects in your git directory.
 
 ### GUI mode
